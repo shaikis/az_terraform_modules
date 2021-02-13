@@ -1,7 +1,59 @@
 #create terraform statefile storage and vault, this is required only one time. later disable this.
-module "init_backend" {
-    source = "./initBackend"
-    
+
+#this module depends on Users_and_groups , Monitoring_Security
+module "key-vault" {
+  source  = "./keyvault"
+  
+  # Resource Group and Key Vault pricing tier details
+  resource_group_name        = module.users_and_groups.audit_rg_name
+  key_vault_name             = "devops-project-shard"
+  key_vault_sku_pricing_tier = "premium"
+
+  # Once `Purge Protection` has been Enabled it's not possible to Disable it
+  # Deleting the Key Vault with `Purge Protection` enabled will schedule the Key Vault to be deleted (currently 90 days)
+  # Once `Soft Delete` has been Enabled it's not possible to Disable it.
+  enable_purge_protection = false
+  enable_soft_delete      = false
+
+  # Adding Key valut logs to Azure monitoring and Log Analytics space
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  storage_account_id         = var.storage_account_id
+
+  # Access policies for users, you can provide list of Azure AD users and set permissions.
+  # Make sure to use list of user principal names of Azure AD users.
+  access_policies = [
+    {
+      azure_ad_user_principal_names = ["user1@example.com", "user2@example.com"]
+      key_permissions               = ["get", "list"]
+      secret_permissions            = ["get", "list"]
+      certificate_permissions       = ["get", "import", "list"]
+      storage_permissions           = ["backup", "get", "list", "recover"]
+    },
+
+    # Access policies for AD Groups, enable this feature to provide list of Azure AD groups and set permissions.
+    {
+      azure_ad_group_names = ["ADGroupName1", "ADGroupName2"]
+      secret_permissions   = ["get", "list", "set"]
+    },
+  ]
+
+  # Create a required Secrets as per your need.
+  # When you Add `usernames` with empty password this module creates a strong random password 
+  # use .tfvars file to manage the secrets as variables to avoid security issues. 
+  secrets = {
+    "message" = "Hello, world!"
+    "vmpass"  = ""
+  }
+
+  # Adding TAG's to your Azure resources (Required)
+  # ProjectName and Env are already declared above, to use them here or create a varible. 
+  tags = {
+    ProjectName  = "demo-project"
+    Env          = "dev"
+    Owner        = "user@example.com"
+    BusinessUnit = "CORP"
+    ServiceClass = "Gold"
+  }
 }
 
 #create AD users,groups and mandatory Resource groups
@@ -34,7 +86,18 @@ module "sqlserver" {
     admin_password                      = data.get_vault_data.sql_admin_user_pass
     audit_storage_primary_blob_endpoint = module.audit_storage.audit_storage_primary_blob_endpoint
     audit_storage_primary_access_key    = module.audit_storage.audit_storage_primary_access_key
-
     
 }
 
+
+
+
+
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "rg-terraformstate"
+    storage_account_name = "terrastatestorage2134"
+    container_name       = "tfstate"
+    key                  = "dev.terraform.tfstate"
+  }
+}
