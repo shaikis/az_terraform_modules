@@ -3,22 +3,14 @@
 #this module depends on Users_and_groups , Monitoring_Security
 module "key-vault" {
   source  = "./keyvault"
-  
-  # Resource Group and Key Vault pricing tier details
   resource_group_name        = module.users_and_groups.audit_rg_name
   key_vault_name             = "devops-project-shard"
   key_vault_sku_pricing_tier = "premium"
-
-  # Once `Purge Protection` has been Enabled it's not possible to Disable it
-  # Deleting the Key Vault with `Purge Protection` enabled will schedule the Key Vault to be deleted (currently 90 days)
-  # Once `Soft Delete` has been Enabled it's not possible to Disable it.
   enable_purge_protection = false
   enable_soft_delete      = false
-
   # Adding Key valut logs to Azure monitoring and Log Analytics space
   log_analytics_workspace_id = var.log_analytics_workspace_id
   storage_account_id         = var.storage_account_id
-
   # Access policies for users, you can provide list of Azure AD users and set permissions.
   # Make sure to use list of user principal names of Azure AD users.
   access_policies = [
@@ -36,7 +28,6 @@ module "key-vault" {
       secret_permissions   = ["get", "list", "set"]
     },
   ]
-
   # Create a required Secrets as per your need.
   # When you Add `usernames` with empty password this module creates a strong random password 
   # use .tfvars file to manage the secrets as variables to avoid security issues. 
@@ -73,6 +64,11 @@ module "audit_storage" {
    storage_name = "audit"
    loc          = "west europe"
    rg_name      = module.users_and_groups.audit_rg_name
+   
+   containers_list = [
+    { name = "default", access_type = "container" }
+  ]
+
 }
 
 #Create sql server
@@ -96,7 +92,7 @@ module "sqlserver" {
 terraform {
   backend "azurerm" {
     resource_group_name  = "rg-terraformstate"
-    storage_account_name = "terrastatestorage2134"
+    storage_account_name = "hallo-dev-tfstate"
     container_name       = "tfstate"
     key                  = "dev.terraform.tfstate"
   }

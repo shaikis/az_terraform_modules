@@ -3,7 +3,7 @@
 ##create AD users,groups and mandatory Resource groups
 #module "users_and_groups" {
 #    source = "./Users_groups"
-#    resource_group_name = "hello_x"
+#    resource_group_name = "rg-terraformstate"
 #    location_name       = "west europe"
 #    resource_group_audit = "hello_x_audit"
 #    
@@ -17,5 +17,9 @@
 #   storage_name = "tfstate"
 #   loc          = "west europe"
 #   rg_name      = module.users_and_groups.resource_group_name
+#   containers_list = [
+#   { name = "tfstate", access_type = "container" }
+# ]
+#
 #}
 
