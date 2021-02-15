@@ -4,6 +4,6 @@ resource "azurerm_resource_group" "resourcegroup" {
 }
 
 resource "azurerm_resource_group" "resourcegroup_audit" {
-  name     = var.resource_group_name
+  name     = var.resource_group_audit
   location = var.location_name
 }

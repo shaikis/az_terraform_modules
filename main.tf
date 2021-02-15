@@ -1,4 +1,11 @@
 #create terraform statefile storage and vault, this is required only one time. later disable this.
+provider "azurerm" {
+  features {
+    key_vault {
+      purge_soft_delete_on_destroy = true
+    }
+  }
+}
 
 #this module depends on Users_and_groups , Monitoring_Security
 module "key-vault" {
@@ -84,8 +91,6 @@ module "sqlserver" {
     audit_storage_primary_access_key    = module.audit_storage.audit_storage_primary_access_key
     
 }
-
-
 
 
 

@@ -12,7 +12,7 @@
 ## Storage account created as projectname-env-audit/hello/xyz"
 #module "tfstate_storage" {
 #   source = "./storage/standard"
-#   project_name = "hello-x"
+#   project_name = "hallo"
 #   env          = "dev"
 #   storage_name = "tfstate"
 #   loc          = "west europe"
