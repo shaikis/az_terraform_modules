@@ -2,13 +2,14 @@
 
 ```
 module "DataBricks" {
-    source = git@github.com:shaikis/az_terraform_modules.git  # if you copied this as a seperate repo in your org.
+#    source = git@github.com:shaikis/az_terraform_modules.git  # if you copied this as a seperate repo in your org.
     source = ./DataBriks
     resource_groupname = var.resource_group_name (or) module.groups.resource_group_name
     resource_location = "Uk South"
     env               = "prod"
     ARM_CLIENT_SECRET = "random password which is generated using terraform random function"
     databricks_cluster_name = var.data_bricks_cluster_name
+    bricks_mount_vol_name  = var.mount_vol_name  # this mount point created in data bricks cluster.
 
 
 }

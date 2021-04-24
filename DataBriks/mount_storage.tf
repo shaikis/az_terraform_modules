@@ -17,7 +17,7 @@ data "azurerm_client_config" "current" {
 resource "databricks_azure_adls_gen2_mount" "marketing" {
     container_name         = azurerm_storage_container.databricks_workspace.name
     storage_account_name   = azurerm_storage_account.this.name
-    mount_name             = "marketing"
+    mount_name             = var.bricks_mount_vol_name
     tenant_id              = data.azurerm_client_config.current.tenant_id
     client_id              = data.azurerm_client_config.current.client_id
     client_secret_scope    = databricks_secret_scope.terraform.name
