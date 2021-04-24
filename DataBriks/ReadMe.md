@@ -23,3 +23,5 @@ module "DataBricks" {
 - `ARM_CLIENT_SECRET`  - Secret details to create service principl, and this service principal used to mount the storage in DataBricks.
 - `databricks_cluster_name` - Cluster name of the DataBricks
 
+### Archetecture diagram.
+![access_control_on_datalake_while_using_dataBricks](https://user-images.githubusercontent.com/60819791/115959629-c1966300-a52a-11eb-8ec3-4b9db61d7c72.png)
