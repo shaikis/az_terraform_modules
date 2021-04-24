@@ -4,7 +4,7 @@ resource "azuread_application" "az_application" {
 }
 
 # Create service principal
-resource "azuread_service_principal" "example" {
+resource "azuread_service_principal" "service_principal" {
   application_id               = azuread_application.az_application.application_id
   app_role_assignment_required = false
 }
@@ -17,7 +17,7 @@ resource "random_password" "password" {
 }
 
 resource "azuread_service_principal_password" "service_principal_password" {
-  service_principal_id = azuread_service_principal.az_application.id
+  service_principal_id = azuread_service_principal.service_principal.id
   description          = "My managed password"
   value                = random_password.password.result
   end_date             = "2099-01-01T01:02:03Z"
