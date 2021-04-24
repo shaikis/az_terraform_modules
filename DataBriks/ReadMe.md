@@ -22,3 +22,4 @@ module "DataBricks" {
 - `env`                - Name of the environment`
 - `ARM_CLIENT_SECRET`  - Secret details to create service principl, and this service principal used to mount the storage in DataBricks.
 - `databricks_cluster_name` - Cluster name of the DataBricks
+
