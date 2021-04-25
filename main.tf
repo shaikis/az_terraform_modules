@@ -54,13 +54,12 @@ module "key-vault" {
   }
 }
 
-#create AD users,groups and mandatory Resource groups
-module "users_and_groups" {
-    source = "./Users_groups"
-    resource_group_name = "hello_x"
-    location_name       = "west europe"
-    resource_group_audit = "hello_x_audit"
-    
+#create resource groups and mandatory Resource groups
+module "Resource_groups" {
+    source = "./Resource_groups"
+    resource_group_name = ["hello_x", "hello_x_audit"]
+    location_name       = "UK South"
+   
 }
 
 # Storage account created as projectname-env-audit/hello/xyz"
@@ -82,7 +81,7 @@ module "audit_storage" {
 module "sqlserver" {
     source = "./SQL_servers/MSsql"
     mssql_server_name                   = "hellosqlserver"
-    rgroup_name                         = module.users_and_groups.project_rg_name
+    rgroup_name                         = module.Resource_groups.project_rg_name
     loc_name                            = "West europe"
     sqlserver_version                   = "12.0"
     admin_login_name                    = data.get_vault_data.sql_admin_user_name
