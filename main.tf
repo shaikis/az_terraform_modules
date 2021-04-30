@@ -10,7 +10,7 @@ provider "azurerm" {
 #this module depends on Users_and_groups , Monitoring_Security
 module "key-vault" {
   source  = "./keyvault"
-  resource_group_name        = module.users_and_groups.audit_rg_name
+  resource_group_name        = module.Resource_groups.audit_rg_name
   key_vault_name             = "devops-project-shard"
   key_vault_sku_pricing_tier = "premium"
   enable_purge_protection = false
@@ -69,7 +69,7 @@ module "audit_storage" {
    env          = "dev"
    storage_name = "audit"
    loc          = "west europe"
-   rg_name      = module.users_and_groups.audit_rg_name
+   rg_name      = module..audit_rg_name
    
    containers_list = [
     { name = "default", access_type = "container" }
