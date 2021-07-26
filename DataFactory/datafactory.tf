@@ -21,7 +21,7 @@ data "azurerm_builtin_role_definition" "contributor" {
 }
 
 resource "azurerm_role_assignment" "main" {
-  scope                = data.azurerm_subscription.current.id
+  scope                = data.azurerm_storage_account.storage_account.id
   role_definition_name = data.azurerm_builtin_role_definition.contributor
   principal_id         = azurerm_data_factory.data_factory.identity.0.principal_id
 }
