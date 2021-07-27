@@ -31,6 +31,6 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "linked_servic
   name                = "storage-Linked-service"
   resource_group_name = var.rg_name
   data_factory_name   = azurerm_data_factory.data_factory.name
-  use_managed_identity   = data.azurerm_storage_account.storage_account.dentity.0.principal_id
+  use_managed_identity   = data.azurerm_data_factory.data_factory.identity.0.principal_id
 
 }
